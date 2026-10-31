@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Query
-from metrovalencia import obtener_paradas, paradas
+from metrovalencia import obtener_paradas, paradas, InvalidMetroResponse
 import requests
 
 app = FastAPI()
@@ -11,16 +11,18 @@ def parada(id_parada:int, limit: int = Query(5, ge=1, le= 10)):
         raise HTTPException(status_code=404, detail="Stop not found")
 
     try:
-        trains, name = obtener_paradas(id_parada)
+        trains, name, updated_at = obtener_paradas(id_parada)
     
     except requests.Timeout:
         raise HTTPException(status_code=504, detail="API Timeout")
     except requests.RequestException:
         raise HTTPException(status_code=502, detail="Metro API error")
-
+    except InvalidMetroResponse:
+        raise HTTPException(status_code=502, detail="Invalid answer from metro API")
     
 
     return {
         "station": name,
         "trains": trains[:limit],
+        "updated_at": updated_at
     }
