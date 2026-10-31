@@ -16,7 +16,43 @@ def obtener_paradas(id_parada):
     payload={}
     respones = requests.request("GET", url, headers=headers, data=payload)
     previsiones = respones.json()
-    texto = f"La proximas previsiones de la parada {parada} son Línea: {previsiones['previsiones'][0]['line']} - Hora: {previsiones['previsiones'][0]['hora']}"
-    print(texto)
+    resultado = recorrerDiccionario(previsiones, id_parada)
+    return resultado
 
-obtener_paradas(int(input("ID: ")))
+
+def recorrerDiccionario(previsiones, id_parada):
+    datos = []
+    if previsiones["previsiones"]:
+        for i in  previsiones["previsiones"]:
+            datos.append(
+                {
+                    "line": i['line'],
+                    "hour": i['hora'],
+                    "destination": i['destino'],
+                    "left": i["seconds"]
+                }
+            )
+            identificador = f"{id_parada}-{i['line']}-{i['destino']}-{i['hora']}"
+        return datos
+    else:
+        return []
+
+def conversionTiempo(seconds):
+    minutes = seconds // 60
+    secondsleft = seconds % 60
+    return minutes, secondsleft
+placeholderTime = 670
+tiempoNotificatin = 5 #min
+minutes, seconds = conversionTiempo(placeholderTime)
+notifications = set()
+def notificar(minutes, seconds, id):
+    pass
+def comprovarTime(seconds, identificador):
+    if minutes < tiempoNotificatin and identificador not in notifications: 
+        notificar(minutes, seconds)
+        notifications.add(identificador)
+
+
+datos1 = obtener_paradas(int(input("ID: ")))
+
+print(datos1)
