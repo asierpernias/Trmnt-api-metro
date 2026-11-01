@@ -4,14 +4,20 @@ import time
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 import logging
+import os
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 cache = {}
-CACHE_TTL = 60
+CONTACT = os.environ.get("METRO_CONTACT", "tu@email.com")
+CACHE_TTL = int(os.environ.get("CACHE_TTL", "60"))
+TIMEOUT = float(os.environ.get("METRO_TIMEOUT", "10"))
+USER_AGENT = f"trmnl-metrovalencia/1 (contact={CONTACT})"
 class InvalidMetroResponse(Exception):
     """The metro API returned an unexpected structure"""
 
-with open('paradas.json', encoding="utf-8") as json_file:
+PARADAS_PATH = Path(__file__).parent / "paradas.json"
+with open(PARADAS_PATH, encoding="utf-8") as json_file:
     paradas = json.load(json_file)
 
 def obtener_paradas(id_parada):
@@ -19,14 +25,15 @@ def obtener_paradas(id_parada):
     if id_parada in cache:
         time_saved, trains, updated_madrid = cache[id_parada]
         if time.monotonic() - time_saved < CACHE_TTL:
+            logger.info("Cache hit for stop %s", id_parada)
             return trains, parada, updated_madrid
+    logger.info("Querying metro API for stop %s", id_parada)
     url = f"https://metroapi.alexbadi.es/prevision/{id_parada}/parse"
     headers = {
-        'User-Agent': 'postman-test/1 (Prueba; contact=example@example.com)',
+        'User-Agent': USER_AGENT,
         'Accept': 'application/json'
     }
-    payload={}
-    respones = requests.request("GET", url, headers=headers, data=payload, timeout=10.0)
+    respones = requests.get(url, headers=headers, timeout=TIMEOUT)
     respones.raise_for_status()
     previsiones = respones.json()
     resultado = recorrerDiccionario(previsiones)
