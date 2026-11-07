@@ -20,7 +20,7 @@ def parada(id_parada:int, limit: int = Query(5, ge=1, le= 10)):
         logger.warning("Metro API timeout for stop %s, %s:", id_parada, e)
         raise HTTPException(status_code=504, detail="API Timeout")
     except requests.RequestException as e:
-        logger.warnin("Metro API error for stop %s, %s:", id_parada, e)
+        logger.warning("Metro API error for stop %s, %s:", id_parada, e)
         raise HTTPException(status_code=502, detail="Metro API error")
     except InvalidMetroResponse as e:
         logger.warning("Invalid Metro respones for stop %s, %s:", id_parada, e)

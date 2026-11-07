@@ -1,0 +1,33 @@
+<div class="layout layout--col">
+  {%if trains.size > 0%}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Línea</th>
+        <th>Destino</th>
+        <th>Hora</th>
+        <th>Min</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in trains %}
+        <tr>
+          <td><span class="label">{{t.line}}</span></td>
+          <td>{{t.destination}}</td>
+          <td>{{t.hour}}</td>
+          <td>{{t.minutes_left}}</td>
+        </tr>
+      {% endfor  %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="layout layout--center">
+    <span>Sin servicio</span>
+  </div>
+  {% endif %}
+</div>
+
+<div class="title_bar">
+  <span class="title">{{station}}</span>
+  <span class="instance">Actualizado {{updated_at | slice: 11, 5}} </span>
+</div>

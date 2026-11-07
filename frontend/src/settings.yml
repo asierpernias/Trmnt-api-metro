@@ -1,0 +1,18 @@
+#
+# Changes to this file will be overwritten by `trmnlp pull`.
+#
+# Docs: https://help.trmnl.com/en/articles/10542599-importing-and-exporting-private-plugins#h_581fb988f0
+#
+---
+strategy: polling
+polling_url: 'https://asier22.hackclub.app/parada/70?limit=5'
+name: Metro Valencia
+refresh_interval: 15
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: latest
+polling_headers: ''
+description: ''
+
