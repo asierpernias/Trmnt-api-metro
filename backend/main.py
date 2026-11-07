@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Query
-from backend.metrovalencia import obtener_paradas, paradas, InvalidMetroResponse
+from metrovalencia import obtener_paradas, paradas, InvalidMetroResponse
 import requests
 import logging
 
