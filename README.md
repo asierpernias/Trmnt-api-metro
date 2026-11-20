@@ -68,7 +68,13 @@ trmnlp serve -d frontend
 Set the stop in `frontend/src/settings.yml` (`polling_url`).
 
 ## Screenshots
+<img width="1002" height="590" alt="Captura de pantalla 2026-11-20 222758" src="https://github.com/user-attachments/assets/c074e91a-54e8-4296-9f3d-6956665ac1bb" />
 
+## Next steps:
+
+- Make it easier to change from the different stations (right now is hardcoded on the frontend polling).
+- Find or create a better data provider in order to be able to have full control of the project and reduce the dependence on external APIs.
+- 
 ## LICENSE
 
 This project is under the MIT License. Read `LICENSE.txt` for more info.
