@@ -1,7 +1,22 @@
-<div class="layout layout--col layout--center">
-  <span class="title title--large">Quadrant</span>
+<div class="layout layout--col">
+  {%if trains.size > 0%}
+  <table class="table">
+    <tbody>
+      {% for t in trains limit: 2 %}
+        <tr>
+          <td><span class="label">{{t.line}}</span></td>
+          <td>{{t.destination |  truncate: 15}}</td>
+          <td>{{t.minutes_left}}</td>
+        </tr>
+      {% endfor  %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="layout layout--center">
+    <span>Sin servicio</span>
+  </div>
+  {% endif %}
 </div>
-
 <div class="title_bar">
-  <span class="title">My Plugin</span>
+  <span class="title">{{station |  truncate: 14}}</span>
 </div>
