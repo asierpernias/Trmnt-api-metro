@@ -3,7 +3,7 @@ A TRMNL plugin that displays the following trains that will arrive to the statio
 
 ## How it works
 
-- `backend/`: a FastAPI service that fetches the schedule and returns a small JSON-
+- `backend/`: a FastAPI service that fetches the schedule and returns a small JSON.
 - `frontend/`: the TRMNL plugin (Liquid templates for all available layouts)
 
 TRMNL polls the backend and later the templates on `frontend/` render the result from the obtained data.
@@ -12,9 +12,9 @@ TRMNL polls the backend and later the templates on `frontend/` render the result
 
 `GET /parada/{stop_id}?limit=5`
 
-- limit: number of trains to return (1-10, default 5).
+`Limit`: number of trains to return (1-10, default 5).
  
-- Example of an API answer:
+Example of an API answer:
 
 ```json
 {
@@ -31,10 +31,21 @@ TRMNL polls the backend and later the templates on `frontend/` render the result
   "updated_at": "2026-11-07T16:05:00+01:00"
 }
 ```
+
+`/health`: Returns `{"status": "ok"}`
+
+Errors: 404 unknown stop / 502 data source failed / 504 data source timed out.
+
 Stop IDs are all listed in `backend/paradas.json`.
 
+| Variable | Default | Purpose |
+|---|---|---|
+| `METRO_CONTACT` | placeholder email | contact included in the User-Agent |
+| `CACHE_TTL` | `60` | seconds to cache a stop's data |
+| `METRO_TIMEOUT` | `10` | timeout (seconds) for the data source |
+
 **Disclaimer:**
-The arrival times come from a thrid-party API (`metroapi.alexbadi.es`) which is not under my control and has had down times before as some stations usually lack of data.
+The arrival times come from a third-party API (`metroapi.alexbadi.es`) which is not under my control and has had down times before as some stations usually lack of data. In that case the API returns a 502.
 
 
 ## Running the backend
@@ -45,7 +56,7 @@ pip install -r requirements.txt
 python -m uvicorn main:app --reload
 ```
 
-## Previewing the pluging
+## Previewing the plugin
 
 **Requires Ruby 4.0+ and [trmnlp](https://github.com/usetrmnl/trmnlp)**
 
@@ -60,4 +71,4 @@ Set the stop in `frontend/src/settings.yml` (`polling_url`).
 
 ## LICENSE
 
-This project is under the MIT License. Reade `LICENSE.txt` for more info.
+This project is under the MIT License. Read `LICENSE.txt` for more info.
