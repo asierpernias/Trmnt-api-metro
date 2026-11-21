@@ -1,21 +1,24 @@
 # MetroValencia Noticias
-A TRMNL plugin that displays the following trains that will arrive to the station you select. It will display the exact time it is supposed to arrive, how many minutes are left for it, the line it works on and which is its destination.
+MetroValencia Noticias is  TRMNL plugin that polls a custom API (`backend/`) and renders the obtained data showing the exact time r the trains are supposed to arrive to the underground station you select, how many minutes there are left for it, which line the train will arrive operates on and its final destination.
+
+**Disclaimer: The API gets its data from a third-party API [Alex Badi MetroValencia API](https://dash.metroapi.alexbadi.es/). It is not under my control so it can lack of some data and have issues at some point.**
 
 ## How it works
 
-- `backend/`: a FastAPI service that fetches the schedule and returns a small JSON.
-- `frontend/`: the TRMNL plugin (Liquid templates for all available layouts)
-
-TRMNL polls the backend and later the templates on `frontend/` render the result from the obtained data.
+- `backend/`: A custom FastAPI API that gets the data from the station, formats it and returns it as a small JSON.
+- `frontend`: The section that polls the data from the backend and renders it. It contains the Liquid files for each different available layout.
 
 ## API
 
-`GET /parada/{stop_id}?limit=5`
+#### `GET parada/{id_parada}?limit=5`
 
-`Limit`: number of trains to return (1-10, default 5).
- 
-Example of an API answer:
+###### id_parada
+`backend/paradas.json` contains a list of all the stations and the code asociated to them. 
 
+###### limit (1-10, Default 5)
+The amount of trains that will be returned in the JSON answer.
+
+###### Answer example
 ```json
 {
   "station": "Colón",
@@ -32,21 +35,13 @@ Example of an API answer:
 }
 ```
 
-`/health`: Returns `{"status": "ok"}`
+#### Health
+Returns `{"status": "ok"}`
 
-Errors: 404 unknown stop / 502 data source failed / 504 data source timed out.
-
-Stop IDs are all listed in `backend/paradas.json`.
-
-| Variable | Default | Purpose |
-|---|---|---|
-| `METRO_CONTACT` | placeholder email | contact included in the User-Agent |
-| `CACHE_TTL` | `60` | seconds to cache a stop's data |
-| `METRO_TIMEOUT` | `10` | timeout (seconds) for the data source |
-
-**Disclaimer:**
-The arrival times come from a third-party API (`metroapi.alexbadi.es`) which is not under my control and has had down times before as some stations usually lack of data. In that case the API returns a 502.
-
+#### Exceptions
+- 404: Stop couldn't be found.
+- 502: Unknown exception on the origina data source.
+- 504: Timeout on the original data source.
 
 ## Running the backend
 
@@ -65,16 +60,16 @@ gem install trmnl_preview
 trmnlp serve -d frontend
 ```
 
-Set the stop in `frontend/src/settings.yml` (`polling_url`).
+Change the `stop_id` on `frontend/src/settings.yml` (`polling_url`) in order to change the station data that is displayed on the device.
+
+## Following steps:
+For now Ill stop working on the project but in a future I would like to add three things:
+1. Fully controlled by me or more reliable/open source data source to avoid errors I cant tackle in any way.
+2. Easier selection and change between different stations polling, as now it is just harcoded.
+3. Compatibility with mobile phone (another project?) that actuates as a notifier.
 
 ## Screenshots
-<img width="1002" height="590" alt="Captura de pantalla 2026-11-20 222758" src="https://github.com/user-attachments/assets/c074e91a-54e8-4296-9f3d-6956665ac1bb" />
 
-## Next steps:
-
-- Make it easier to change from the different stations (right now is hardcoded on the frontend polling).
-- Find or create a better data provider in order to be able to have full control of the project and reduce the dependence on external APIs.
-- 
 ## LICENSE
 
 This project is under the MIT License. Read `LICENSE.txt` for more info.
